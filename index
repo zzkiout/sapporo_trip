@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>삿포로 여행 일정</title>
+  <style>
+    :root{
+      --bg1:#eaf6ff;
+      --bg2:#ffffff;
+      --card:#ffffffcc;
+      --text:#1f2a44;
+      --muted:#5f6f93;
+      --line:#cfe3ff;
+      --accent:#4f8cff;
+      --accent2:#ff7aa5;
+      --shadow: 0 10px 26px rgba(36, 75, 140, .16);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 700px at 15% 5%, #d7efff 0%, rgba(215,239,255,0) 60%),
+        radial-gradient(900px 700px at 80% 10%, #ffe1ee 0%, rgba(255,225,238,0) 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    /* Cute falling snow */
+    .snow{
+      pointer-events:none;
+      position:fixed; inset:0; z-index:0;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,.9) 0 2px, transparent 3px),
+        radial-gradient(circle at 30% 70%, rgba(255,255,255,.9) 0 1.5px, transparent 3px),
+        radial-gradient(circle at 70% 30%, rgba(255,255,255,.9) 0 1.8px, transparent 3px),
+        radial-gradient(circle at 90% 60%, rgba(255,255,255,.9) 0 1.2px, transparent 3px);
+      background-size: 220px 220px, 260px 260px, 240px 240px, 280px 280px;
+      animation: snowMove 14s linear infinite;
+      opacity:.7;
+    }
+    @keyframes snowMove{
+      from{ background-position: 0 0, 0 0, 0 0, 0 0; }
+      to{ background-position: 0 520px, 0 620px, 0 560px, 0 680px; }
+    }
+
+    header{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(to bottom, rgba(255,255,255,.85), rgba(255,255,255,.55));
+      border-bottom: 1px solid rgba(207,227,255,.85);
+    }
+    .wrap{max-width:1080px; margin:0 auto; padding:0 14px; position:relative; z-index:2;}
+    .top{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:18px 0 14px;
+      flex-wrap:wrap;
+    }
+    h1{
+      margin:0;
+      font-size:20px;
+      letter-spacing:.2px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .sub{
+      margin:0 0 12px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    /* NEW: Header character image */
+    .heroChar{
+      width:66px; height:66px;
+      object-fit:contain;
+      border-radius:16px;
+      filter: drop-shadow(0 10px 12px rgba(79,140,255,.18));
+      user-select:none;
+    }
+
+    main{padding:16px 0 42px;}
+    .grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:14px;}
+    @media (max-width:900px){ .grid{grid-template-columns:1fr;} header{position:static;} }
+
+    .card{
+      background: var(--card);
+      border:1px solid rgba(207,227,255,.95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding:14px 14px 12px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-bottom: 1px solid rgba(207,227,255,.95);
+      background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.55));
+    }
+    .card .bd{padding:14px;}
+
+    .btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+    button{
+      appearance:none;
+      border:1px solid rgba(207,227,255,.95);
+      background:#ffffffb3;
+      color:var(--text);
+      padding:10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:13px;
+      box-shadow: 0 8px 18px rgba(79,140,255,.08);
+    }
+    button:hover{border-color: rgba(79,140,255,.65)}
+    button.primary{
+      background: linear-gradient(180deg, rgba(79,140,255,.18), rgba(79,140,255,.10));
+      border-color: rgba(79,140,255,.55);
+    }
+    button:disabled{opacity:.55; cursor:not-allowed}
+
+    .row{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
+    @media (max-width:520px){ .row{grid-template-columns:1fr;} }
+
+    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px; font-weight:700;}
+    input, textarea, select{
+      width:100%;
+      padding:10px 11px;
+      border-radius: 14px;
+      border:1px solid rgba(207,227,255,.95);
+      background: rgba(255,255,255,.92);
+      color:var(--text);
+      outline:none;
+      font-size:13px;
+      box-shadow: 0 10px 18px rgba(79,140,255,.06);
+    }
+    textarea{min-height:84px; resize:vertical; line-height:1.45}
+    input:focus, textarea:focus, select:focus{border-color: rgba(79,140,255,.75)}
+    .hint{color:var(--muted); font-size:12px; margin-top:8px; line-height:1.45}
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(207,227,255,.95);
+      background: rgba(255,255,255,.7);
+      color:var(--muted); font-size:12px; font-weight:800;
+      box-shadow: 0 10px 18px rgba(79,140,255,.06);
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 11px; border-radius:999px;
+      border:1px solid rgba(79,140,255,.35);
+      background: rgba(79,140,255,.12);
+      color:#2b4ea3; font-size:12px; font-weight:900;
+    }
+    /* NEW: Day badge */
+    .dayBadge{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,122,165,.35);
+      background: rgba(255,122,165,.12);
+      color:#8a2a52;
+      font-size:12px;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+
+    .small{font-size:12px; color:var(--muted);}
+
+    .list{display:flex; flex-direction:column; gap:10px;}
+    .day{
+      border:1px solid rgba(207,227,255,.95);
+      border-radius: 16px;
+      overflow:hidden;
+      background: rgba(255,255,255,.68);
+      box-shadow: 0 12px 20px rgba(79,140,255,.06);
+    }
+    .day .dayhd{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:12px 12px;
+      border-bottom:1px solid rgba(207,227,255,.95);
+      background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.55));
+    }
+    .daytitle{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+    .daytitle b{font-size:14px}
+    .daytitle span{color:var(--muted); font-size:12px}
+
+    .items{padding:10px 10px 12px; display:flex; flex-direction:column; gap:8px;}
+    .item{
+      border:1px solid rgba(207,227,255,.95);
+      border-radius: 16px;
+      padding:10px 10px;
+      background: rgba(255,255,255,.85);
+      display:grid;
+      grid-template-columns: 24px 1fr auto;
+      gap:10px;
+      align-items:flex-start;
+      box-shadow: 0 12px 18px rgba(79,140,255,.06);
+    }
+    .drag{
+      width:24px; height:24px;
+      border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      border:1px dashed rgba(95,111,147,.45);
+      color:rgba(95,111,147,.75);
+      cursor:grab;
+      user-select:none;
+      margin-top:2px;
+      background: rgba(255,255,255,.85);
+    }
+    .meta{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+    .time{font-weight:900; font-size:12px; color:#2b4ea3}
+    .spot{font-weight:900; font-size:13px}
+    .loc{font-size:12px; color:var(--muted)}
+    .note{margin-top:6px; font-size:12px; color:rgba(31,42,68,.88); line-height:1.45; white-space:pre-wrap}
+    .actions{display:flex; gap:6px;}
+    .actions button{padding:8px 10px; border-radius:14px; font-size:12px}
+    .actions button.danger{
+      border-color: rgba(255,122,165,.55);
+      background: rgba(255,122,165,.14);
+    }
+
+    .toast{
+      position: fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background: rgba(255,255,255,.92);
+      border:1px solid rgba(207,227,255,.95);
+      border-radius: 999px;
+      padding:10px 14px;
+      box-shadow: var(--shadow);
+      color: var(--text);
+      font-size: 13px;
+      opacity:0; pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+      z-index:99;
+    }
+    .toast.show{opacity:1; transform: translateX(-50%) translateY(-4px);}
+
+    .hr{height:1px; background: rgba(207,227,255,.95); margin:12px 0;}
+  </style>
+</head>
+<body>
+  <div class="snow"></div>
+
+  <header>
+    <div class="wrap">
+      <div class="top">
+        <h1>
+          <!-- 변경 1) 눈사람 대신 캐릭터 이미지 -->
+          <img class="heroChar" src="character.png" alt="캐릭터" />
+          삿포로 여행 일정 공유 플래너
+        </h1>
+        <span class="pill" id="shareStatus">공유 링크: 아직 생성 전</span>
+      </div>
+      <p class="sub">
+        일정 추가/수정/삭제/드래그 정렬 가능 · <b>공유 링크 만들기</b>로 친구에게 그대로 전달하세요.<br/>
+        팁: 수정한 사람이 다시 “공유 링크 만들기” 눌러 최신 링크를 공유하면, 다 같이 같은 일정으로 맞출 수 있어요.
+      </p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <section class="card">
+        <div class="hd">
+          <div>
+            <div class="badge">📅 일정</div>
+            <div class="small" style="margin-top:6px;">항목 왼쪽 핸들을 드래그하면 같은 날짜 안에서 순서 변경!</div>
+          </div>
+          <div class="btns">
+            <button class="primary" id="btnShare">공유 링크 만들기</button>
+            <button id="btnCopy" disabled>링크 복사</button>
+          </div>
+        </div>
+        <div class="bd">
+          <div id="planList" class="list"></div>
+          <div class="hint" id="emptyHint" style="display:none;">
+            아직 일정이 없어요. 오른쪽에서 일정을 추가해보세요 ❄️
+          </div>
+        </div>
+      </section>
+
+      <aside class="card">
+        <div class="hd">
+          <div>
+            <div class="badge">➕ 새 일정 추가</div>
+            <div class="small" style="margin-top:6px;">필요하면 시간 범위를 설정할 수 있어요 (예: 16:00 – 17:00)</div>
+          </div>
+          <div class="btns">
+            <button class="primary" id="btnAdd">추가</button>
+            <button id="btnClear">입력 지우기</button>
+          </div>
+        </div>
+        <div class="bd">
+          <div class="row">
+            <div>
+              <label>날짜</label>
+              <input id="fDate" type="date" />
+            </div>
+            <div>
+              <label>카테고리</label>
+              <select id="fTag">
+                <option value="Food">🍣 음식</option>
+                <option value="Cafe">☕️ 카페</option>
+                <option value="Sight">🏔️ 관광</option>
+                <option value="Shopping">🛍️ 쇼핑</option>
+                <option value="Transit">🚇 교통</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <div>
+              <label>시작 시간 (선택)</label>
+              <input id="fStart" type="time" />
+            </div>
+            <div>
+              <label>종료 시간 (선택)</label>
+              <input id="fEnd" type="time" />
+            </div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <label>장소/스팟 이름</label>
+            <input id="fTitle" placeholder="예: 오타루 운하 야경 산책" />
+          </div>
+
+          <div style="margin-top:10px;">
+            <label>주소/지역 (선택)</label>
+            <input id="fLocation" placeholder="예: Susukino / Sapporo Station / Otaru Canal ..." />
+          </div>
+
+          <div style="margin-top:10px;">
+            <label>메모 (선택)</label>
+            <textarea id="fNote" placeholder="예: 추천 메뉴, 예약 필요 여부, 사진 스팟, 이동 팁 등"></textarea>
+          </div>
+
+          <div class="hr"></div>
+          <div class="hint">
+            ✅ 공유 방식: 현재 일정은 “공유 링크”에 담겨요. 친구가 링크로 들어와 수정한 뒤, 다시 공유 링크를 만들어 보내면 최신 버전으로 맞출 수 있어요.
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const toastEl = $("toast");
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      setTimeout(()=>toastEl.classList.remove("show"), 1600);
+    }
+    function uid(){
+      return Math.random().toString(36).slice(2,10) + "-" + Date.now().toString(36);
+    }
+
+    const CAT = {
+      Food: { label: "음식", emoji: "🍣" },
+      Cafe: { label: "카페", emoji: "☕️" },
+      Sight: { label: "관광", emoji: "🏔️" },
+      Shopping: { label: "쇼핑", emoji: "🛍️" },
+      Transit: { label: "교통", emoji: "🚇" }
+    };
+    function catText(tag){
+      const c = CAT[tag] || {label:"기타", emoji:"✨"};
+      return `${c.emoji} ${c.label}`;
+    }
+
+    const STORAGE_KEY = "sapporo_trip_plan_v3_char_day";
+    const defaultPlan = { days: {} };
+    let plan = structuredClone(defaultPlan);
+
+    function toBase64Url(str){
+      const bytes = new TextEncoder().encode(str);
+      let bin = "";
+      bytes.forEach(b => bin += String.fromCharCode(b));
+      const b64 = btoa(bin);
+      return b64.replaceAll("+","-").replaceAll("/","_").replaceAll("=","");
+    }
+    function fromBase64Url(b64url){
+      const b64 = b64url.replaceAll("-","+").replaceAll("_","/") + "===".slice((b64url.length + 3) % 4);
+      const bin = atob(b64);
+      const bytes = new Uint8Array([...bin].map(c => c.charCodeAt(0)));
+      return new TextDecoder().decode(bytes);
+    }
+
+    function loadFromUrl(){
+      const h = location.hash.startsWith("#") ? location.hash.slice(1) : "";
+      const params = new URLSearchParams(h);
+      const p = params.get("p");
+      if(!p) return false;
+      try{
+        const json = fromBase64Url(p);
+        const obj = JSON.parse(json);
+        if(obj && typeof obj === "object" && obj.days) {
+          plan = obj;
+          toast("공유 링크에서 일정을 불러왔어요!");
+          setShareStatus(true);
+          return true;
+        }
+      }catch(e){
+        console.warn(e);
+        toast("링크 데이터 읽기에 실패했어요.");
+      }
+      return false;
+    }
+    function loadFromStorage(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return false;
+        const obj = JSON.parse(raw);
+        if(obj && typeof obj === "object" && obj.days){
+          plan = obj;
+          return true;
+        }
+      }catch(e){
+        console.warn(e);
+      }
+      return false;
+    }
+    function saveToStorage(){
+      try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(plan));
+      }catch(e){
+        console.warn(e);
+      }
+    }
+
+    function dayKeysSorted(){ return Object.keys(plan.days).sort(); }
+
+    function fmtDateLabel(yyyyMmDd){
+      const d = new Date(yyyyMmDd + "T00:00:00");
+      if(Number.isNaN(d.getTime())) return yyyyMmDd;
+      const dow = ["일","월","화","수","목","금","토"][d.getDay()];
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${mm}/${dd} (${dow})`;
+    }
+
+    function timeLabel(it){
+      const s = (it.start || "").trim();
+      const e = (it.end || "").trim();
+      if(s && e) return `${s} – ${e}`;
+      if(s) return s;
+      if(e) return `~ ${e}`;
+      return "시간 미정";
+    }
+
+    function sortItems(items){
+      items.sort((a,b)=>{
+        const at = (a.start || "99:99");
+        const bt = (b.start || "99:99");
+        const c = at.localeCompare(bt);
+        if(c !== 0) return c;
+        return (a.title || "").localeCompare(b.title || "");
+      });
+    }
+
+    // 변경 2) Day 1, Day 2 표시 추가
+    function render(){
+      const list = $("planList");
+      list.innerHTML = "";
+      const keys = dayKeysSorted();
+      $("emptyHint").style.display = (keys.length === 0) ? "block" : "none";
+
+      keys.forEach((dateKey, i) => {
+        const dayNumber = i + 1;
+
+        const dayBox = document.createElement("div");
+        dayBox.className = "day";
+
+        const header = document.createElement("div");
+        header.className = "dayhd";
+
+        const left = document.createElement("div");
+        left.className = "daytitle";
+
+        const dayBadge = document.createElement("span");
+        dayBadge.className = "dayBadge";
+        dayBadge.textContent = `Day ${dayNumber}`;
+
+        const b = document.createElement("b");
+        b.textContent = fmtDateLabel(dateKey);
+
+        const s = document.createElement("span");
+        s.textContent = dateKey;
+
+        left.appendChild(dayBadge);
+        left.appendChild(b);
+        left.appendChild(s);
+
+        header.appendChild(left);
+
+        const itemsWrap = document.createElement("div");
+        itemsWrap.className = "items";
+        itemsWrap.dataset.date = dateKey;
+
+        const items = plan.days[dateKey] || [];
+        sortItems(items);
+
+        items.forEach((it) => {
+          const itemEl = document.createElement("div");
+          itemEl.className = "item";
+          itemEl.draggable = true;
+          itemEl.dataset.id = it.id;
+          itemEl.dataset.date = dateKey;
+
+          const drag = document.createElement("div");
+          drag.className = "drag";
+          drag.title = "드래그해서 순서 변경";
+          drag.textContent = "⋮⋮";
+
+          const body = document.createElement("div");
+
+          const meta = document.createElement("div");
+          meta.className = "meta";
+
+          const time = document.createElement("span");
+          time.className = "time";
+          time.textContent = timeLabel(it);
+
+          const tag = document.createElement("span");
+          tag.className = "pill";
+          tag.textContent = catText(it.tag);
+
+          const spot = document.createElement("span");
+          spot.className = "spot";
+          spot.textContent = it.title || "(제목 없음)";
+
+          meta.appendChild(time);
+          meta.appendChild(tag);
+          meta.appendChild(spot);
+
+          const loc = document.createElement("div");
+          loc.className = "loc";
+          loc.textContent = it.location ? it.location : "";
+
+          const note = document.createElement("div");
+          note.className = "note";
+          note.textContent = it.note ? it.note : "";
+
+          body.appendChild(meta);
+          if(it.location) body.appendChild(loc);
+          if(it.note) body.appendChild(note);
+
+          const actions = document.createElement("div");
+          actions.className = "actions";
+
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "수정";
+          editBtn.onclick = () => {
+            $("fDate").value = dateKey;
+            $("fStart").value = it.start || "";
+            $("fEnd").value = it.end || "";
+            $("fTitle").value = it.title || "";
+            $("fTag").value = it.tag || "Food";
+            $("fLocation").value = it.location || "";
+            $("fNote").value = it.note || "";
+            editing = { date: dateKey, id: it.id };
+            $("btnAdd").textContent = "수정 저장";
+            toast("수정 모드: 오른쪽에서 저장하세요");
+          };
+
+          const delBtn = document.createElement("button");
+          delBtn.className = "danger";
+          delBtn.textContent = "삭제";
+          delBtn.onclick = () => {
+            if(confirm("이 항목을 삭제할까요?")){
+              plan.days[dateKey] = (plan.days[dateKey] || []).filter(x => x.id !== it.id);
+              if(plan.days[dateKey].length === 0) delete plan.days[dateKey];
+              saveToStorage();
+              render();
+              toast("삭제 완료");
+            }
+          };
+
+          actions.appendChild(editBtn);
+          actions.appendChild(delBtn);
+
+          itemEl.appendChild(drag);
+          itemEl.appendChild(body);
+          itemEl.appendChild(actions);
+
+          itemEl.addEventListener("dragstart", (e)=>{
+            e.dataTransfer.setData("text/plain", JSON.stringify({ date: dateKey, id: it.id }));
+            e.dataTransfer.effectAllowed = "move";
+            itemEl.style.opacity = "0.60";
+          });
+          itemEl.addEventListener("dragend", ()=>{
+            itemEl.style.opacity = "1";
+          });
+
+          itemsWrap.appendChild(itemEl);
+        });
+
+        itemsWrap.addEventListener("dragover", (e)=>{
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+        });
+        itemsWrap.addEventListener("drop", (e)=>{
+          e.preventDefault();
+          const payload = e.dataTransfer.getData("text/plain");
+          if(!payload) return;
+          let dragged;
+          try{ dragged = JSON.parse(payload); } catch { return; }
+          if(dragged.date !== dateKey) {
+            toast("같은 날짜 안에서만 드래그 정렬이 가능해요.");
+            return;
+          }
+          const items = plan.days[dateKey] || [];
+          const fromIdx = items.findIndex(x => x.id === dragged.id);
+          if(fromIdx < 0) return;
+
+          const target = e.target.closest(".item");
+          if(!target) return;
+          const toId = target.dataset.id;
+          const toIdx = items.findIndex(x => x.id === toId);
+          if(toIdx < 0 || toIdx === fromIdx) return;
+
+          const [moved] = items.splice(fromIdx, 1);
+          items.splice(toIdx, 0, moved);
+          plan.days[dateKey] = items;
+
+          saveToStorage();
+          render();
+          toast("순서를 변경했어요.");
+        });
+
+        dayBox.appendChild(header);
+        dayBox.appendChild(itemsWrap);
+        list.appendChild(dayBox);
+      });
+
+      setShareStatus(location.hash.includes("p="));
+    }
+
+    let editing = null;
+
+    function clearForm(){
+      $("fStart").value = "";
+      $("fEnd").value = "";
+      $("fTitle").value = "";
+      $("fTag").value = "Food";
+      $("fLocation").value = "";
+      $("fNote").value = "";
+      editing = null;
+      $("btnAdd").textContent = "추가";
+    }
+
+    function upsertItem(){
+      const date = $("fDate").value;
+      const start = $("fStart").value.trim();
+      const end = $("fEnd").value.trim();
+      const title = $("fTitle").value.trim();
+      const tag = $("fTag").value;
+      const location = $("fLocation").value.trim();
+      const note = $("fNote").value.trim();
+
+      if(!date){ toast("날짜를 선택해주세요."); return; }
+      if(!title){ toast("장소/스팟 이름은 꼭 입력해주세요."); return; }
+      if(start && end && end < start){ toast("종료 시간이 시작 시간보다 빠를 수 없어요."); return; }
+
+      plan.days[date] = plan.days[date] || [];
+
+      if(editing && editing.date === date){
+        const idx = plan.days[date].findIndex(x => x.id === editing.id);
+        if(idx >= 0){
+          plan.days[date][idx] = { ...plan.days[date][idx], start, end, title, tag, location, note };
+          toast("수정 저장 완료!");
+        } else {
+          plan.days[date].push({ id: uid(), start, end, title, tag, location, note });
+          toast("추가 완료!");
+        }
+      } else if(editing && editing.date !== date){
+        const prevDate = editing.date;
+        const prevItems = plan.days[prevDate] || [];
+        const prevIdx = prevItems.findIndex(x => x.id === editing.id);
+        if(prevIdx >= 0){
+          const old = prevItems.splice(prevIdx, 1)[0];
+          if(prevItems.length === 0) delete plan.days[prevDate];
+          plan.days[date].push({ ...old, start, end, title, tag, location, note });
+          toast("다른 날짜로 이동 + 수정 저장!");
+        } else {
+          plan.days[date].push({ id: uid(), start, end, title, tag, location, note });
+          toast("추가 완료!");
+        }
+      } else {
+        plan.days[date].push({ id: uid(), start, end, title, tag, location, note });
+        toast("추가 완료!");
+      }
+
+      saveToStorage();
+      clearForm();
+      render();
+    }
+
+    function setShareStatus(enabled){
+      const pill = $("shareStatus");
+      pill.textContent = enabled ? "공유 링크: 생성됨 ❄️" : "공유 링크: 아직 생성 전";
+      $("btnCopy").disabled = !enabled;
+    }
+
+    function makeShareLink(){
+      const json = JSON.stringify(plan);
+      const encoded = toBase64Url(json);
+      const params = new URLSearchParams();
+      params.set("p", encoded);
+      location.hash = params.toString();
+      setShareStatus(true);
+      toast("공유 링크를 만들었어요!");
+    }
+
+    async function copyLink(){
+      const url = location.href;
+      try{
+        await navigator.clipboard.writeText(url);
+        toast("링크를 복사했어요!");
+      }catch(e){
+        prompt("복사에 실패했어요. 아래를 직접 복사해주세요:", url);
+      }
+    }
+
+    $("btnAdd").addEventListener("click", upsertItem);
+    $("btnClear").addEventListener("click", ()=>{
+      clearForm();
+      toast("입력을 지웠어요.");
+    });
+    $("btnShare").addEventListener("click", makeShareLink);
+    $("btnCopy").addEventListener("click", copyLink);
+
+    (function init(){
+      const loadedFromUrl = loadFromUrl();
+      if(!loadedFromUrl) loadFromStorage();
+
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      $("fDate").value = `${yyyy}-${mm}-${dd}`;
+
+      setShareStatus(location.hash.includes("p="));
+      render();
+    })();
+  </script>
+</body>
+</html>
