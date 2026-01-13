@@ -29,7 +29,7 @@
       overflow-x:hidden;
     }
 
-    /* Cute falling snow (lightweight) */
+    /* Cute falling snow */
     .snow{
       pointer-events:none;
       position:fixed; inset:0; z-index:0;
@@ -72,57 +72,13 @@
       line-height:1.45;
     }
 
-    /* Snowman (CSS) */
-    .snowman{
-      width:66px; height:66px; position:relative; flex:0 0 auto;
+    /* NEW: Header character image */
+    .heroChar{
+      width:66px; height:66px;
+      object-fit:contain;
+      border-radius:16px;
       filter: drop-shadow(0 10px 12px rgba(79,140,255,.18));
-    }
-    .snowman .ball{
-      position:absolute; left:50%; transform:translateX(-50%);
-      background: linear-gradient(180deg, #ffffff, #eaf4ff);
-      border: 1px solid rgba(207,227,255,.9);
-      border-radius:999px;
-    }
-    .snowman .b1{ width:46px; height:46px; bottom:0; }
-    .snowman .b2{ width:34px; height:34px; bottom:28px; }
-    .snowman .eye{
-      position:absolute; width:4px; height:4px; background:#2b3a5c; border-radius:999px;
-      top:25px;
-    }
-    .snowman .e1{ left:28px; }
-    .snowman .e2{ left:38px; }
-    .snowman .nose{
-      position:absolute; width:0; height:0;
-      border-left:8px solid #ff9a4a;
-      border-top:4px solid transparent;
-      border-bottom:4px solid transparent;
-      left:42px; top:30px;
-      transform: rotate(8deg);
-    }
-    .snowman .hat{
-      position:absolute; left:50%; transform:translateX(-50%);
-      width:34px; height:18px; top:2px;
-    }
-    .snowman .hat:before{
-      content:""; position:absolute; left:4px; top:0;
-      width:26px; height:14px; border-radius:8px 8px 6px 6px;
-      background:#2b3a5c;
-    }
-    .snowman .hat:after{
-      content:""; position:absolute; left:0; top:12px;
-      width:34px; height:6px; border-radius:999px;
-      background:#2b3a5c;
-    }
-    .snowman .scarf{
-      position:absolute; left:50%; transform:translateX(-50%);
-      top:18px; width:36px; height:10px; border-radius:999px;
-      background: linear-gradient(90deg, #ff7aa5, #ffb0c8);
-    }
-    .snowman .scarfTail{
-      position:absolute; left:40px; top:22px;
-      width:10px; height:16px; border-radius:6px;
-      background: linear-gradient(180deg, #ff7aa5, #ffb0c8);
-      transform: rotate(10deg);
+      user-select:none;
     }
 
     main{padding:16px 0 42px;}
@@ -197,6 +153,19 @@
       background: rgba(79,140,255,.12);
       color:#2b4ea3; font-size:12px; font-weight:900;
     }
+    /* NEW: Day badge */
+    .dayBadge{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,122,165,.35);
+      background: rgba(255,122,165,.12);
+      color:#8a2a52;
+      font-size:12px;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+
     .small{font-size:12px; color:var(--muted);}
 
     .list{display:flex; flex-direction:column; gap:10px;}
@@ -213,7 +182,7 @@
       border-bottom:1px solid rgba(207,227,255,.95);
       background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.55));
     }
-    .daytitle{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;}
+    .daytitle{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
     .daytitle b{font-size:14px}
     .daytitle span{color:var(--muted); font-size:12px}
 
@@ -277,16 +246,8 @@
     <div class="wrap">
       <div class="top">
         <h1>
-          <div class="snowman" aria-hidden="true">
-            <div class="hat"></div>
-            <div class="ball b2"></div>
-            <div class="ball b1"></div>
-            <div class="eye e1"></div>
-            <div class="eye e2"></div>
-            <div class="nose"></div>
-            <div class="scarf"></div>
-            <div class="scarfTail"></div>
-          </div>
+          <!-- 변경 1) 눈사람 대신 캐릭터 이미지 -->
+          <img class="heroChar" src="character.png" alt="캐릭터" />
           삿포로 여행 일정 공유 플래너
         </h1>
         <span class="pill" id="shareStatus">공유 링크: 아직 생성 전</span>
@@ -300,7 +261,6 @@
 
   <main class="wrap">
     <div class="grid">
-      <!-- Planner -->
       <section class="card">
         <div class="hd">
           <div>
@@ -320,7 +280,6 @@
         </div>
       </section>
 
-      <!-- Form -->
       <aside class="card">
         <div class="hd">
           <div>
@@ -388,7 +347,6 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    // ---------- Utilities ----------
     const $ = (id) => document.getElementById(id);
     const toastEl = $("toast");
     function toast(msg){
@@ -400,7 +358,6 @@
       return Math.random().toString(36).slice(2,10) + "-" + Date.now().toString(36);
     }
 
-    // ---------- Category helpers ----------
     const CAT = {
       Food: { label: "음식", emoji: "🍣" },
       Cafe: { label: "카페", emoji: "☕️" },
@@ -413,15 +370,10 @@
       return `${c.emoji} ${c.label}`;
     }
 
-    // ---------- Data Model ----------
-    // plan = { days: { "YYYY-MM-DD": [ item, ... ] } }
-    // item = { id, start, end, title, tag, location, note }
-    const STORAGE_KEY = "sapporo_trip_plan_v2_winter";
-
+    const STORAGE_KEY = "sapporo_trip_plan_v3_char_day";
     const defaultPlan = { days: {} };
     let plan = structuredClone(defaultPlan);
 
-    // ---------- Base64 URL-safe encode/decode ----------
     function toBase64Url(str){
       const bytes = new TextEncoder().encode(str);
       let bin = "";
@@ -436,7 +388,6 @@
       return new TextDecoder().decode(bytes);
     }
 
-    // ---------- Load: URL -> localStorage -> default ----------
     function loadFromUrl(){
       const h = location.hash.startsWith("#") ? location.hash.slice(1) : "";
       const params = new URLSearchParams(h);
@@ -457,7 +408,6 @@
       }
       return false;
     }
-
     function loadFromStorage(){
       try{
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -472,7 +422,6 @@
       }
       return false;
     }
-
     function saveToStorage(){
       try{
         localStorage.setItem(STORAGE_KEY, JSON.stringify(plan));
@@ -481,10 +430,7 @@
       }
     }
 
-    // ---------- Rendering ----------
-    function dayKeysSorted(){
-      return Object.keys(plan.days).sort();
-    }
+    function dayKeysSorted(){ return Object.keys(plan.days).sort(); }
 
     function fmtDateLabel(yyyyMmDd){
       const d = new Date(yyyyMmDd + "T00:00:00");
@@ -504,7 +450,6 @@
       return "시간 미정";
     }
 
-    // Sort by start time (empty last)
     function sortItems(items){
       items.sort((a,b)=>{
         const at = (a.start || "99:99");
@@ -515,14 +460,16 @@
       });
     }
 
+    // 변경 2) Day 1, Day 2 표시 추가
     function render(){
       const list = $("planList");
       list.innerHTML = "";
       const keys = dayKeysSorted();
-
       $("emptyHint").style.display = (keys.length === 0) ? "block" : "none";
 
-      keys.forEach(dateKey => {
+      keys.forEach((dateKey, i) => {
+        const dayNumber = i + 1;
+
         const dayBox = document.createElement("div");
         dayBox.className = "day";
 
@@ -531,10 +478,18 @@
 
         const left = document.createElement("div");
         left.className = "daytitle";
+
+        const dayBadge = document.createElement("span");
+        dayBadge.className = "dayBadge";
+        dayBadge.textContent = `Day ${dayNumber}`;
+
         const b = document.createElement("b");
         b.textContent = fmtDateLabel(dateKey);
+
         const s = document.createElement("span");
         s.textContent = dateKey;
+
+        left.appendChild(dayBadge);
         left.appendChild(b);
         left.appendChild(s);
 
@@ -630,7 +585,6 @@
           itemEl.appendChild(body);
           itemEl.appendChild(actions);
 
-          // Drag & drop handlers
           itemEl.addEventListener("dragstart", (e)=>{
             e.dataTransfer.setData("text/plain", JSON.stringify({ date: dateKey, id: it.id }));
             e.dataTransfer.effectAllowed = "move";
@@ -643,7 +597,6 @@
           itemsWrap.appendChild(itemEl);
         });
 
-        // Drop area: reorder within same date
         itemsWrap.addEventListener("dragover", (e)=>{
           e.preventDefault();
           e.dataTransfer.dropEffect = "move";
@@ -685,8 +638,7 @@
       setShareStatus(location.hash.includes("p="));
     }
 
-    // ---------- Add / Edit ----------
-    let editing = null; // {date, id}
+    let editing = null;
 
     function clearForm(){
       $("fStart").value = "";
@@ -708,18 +660,9 @@
       const location = $("fLocation").value.trim();
       const note = $("fNote").value.trim();
 
-      if(!date){
-        toast("날짜를 선택해주세요.");
-        return;
-      }
-      if(!title){
-        toast("장소/스팟 이름은 꼭 입력해주세요.");
-        return;
-      }
-      if(start && end && end < start){
-        toast("종료 시간이 시작 시간보다 빠를 수 없어요.");
-        return;
-      }
+      if(!date){ toast("날짜를 선택해주세요."); return; }
+      if(!title){ toast("장소/스팟 이름은 꼭 입력해주세요."); return; }
+      if(start && end && end < start){ toast("종료 시간이 시작 시간보다 빠를 수 없어요."); return; }
 
       plan.days[date] = plan.days[date] || [];
 
@@ -755,7 +698,6 @@
       render();
     }
 
-    // ---------- Share Link ----------
     function setShareStatus(enabled){
       const pill = $("shareStatus");
       pill.textContent = enabled ? "공유 링크: 생성됨 ❄️" : "공유 링크: 아직 생성 전";
@@ -782,7 +724,6 @@
       }
     }
 
-    // ---------- Wire up ----------
     $("btnAdd").addEventListener("click", upsertItem);
     $("btnClear").addEventListener("click", ()=>{
       clearForm();
@@ -791,12 +732,10 @@
     $("btnShare").addEventListener("click", makeShareLink);
     $("btnCopy").addEventListener("click", copyLink);
 
-    // ---------- Init ----------
     (function init(){
       const loadedFromUrl = loadFromUrl();
       if(!loadedFromUrl) loadFromStorage();
 
-      // default date: today (browser local)
       const d = new Date();
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth()+1).padStart(2,"0");
