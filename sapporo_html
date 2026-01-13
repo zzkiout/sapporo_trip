@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sapporo Trip Planner</title>
+  <style>
+    :root{
+      --bg:#0b0f19; --card:#121a2b; --muted:#8ea0c9; --text:#e9eefc;
+      --line:#223055; --accent:#7aa7ff; --danger:#ff6b6b; --ok:#31d0aa;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background: radial-gradient(1200px 900px at 10% 10%, #182a5a 0%, rgba(24,42,90,0) 60%),
+                  radial-gradient(900px 700px at 90% 20%, #2a1458 0%, rgba(42,20,88,0) 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    header{
+      padding:24px 16px 10px;
+      position:sticky; top:0; backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(11,15,25,.9), rgba(11,15,25,.55));
+      border-bottom: 1px solid rgba(34,48,85,.55);
+      z-index:20;
+    }
+    .wrap{max-width:1080px; margin:0 auto; padding:0 12px;}
+    h1{margin:0; font-size:20px; letter-spacing:.2px;}
+    .sub{margin:6px 0 0; color:var(--muted); font-size:13px; line-height:1.4}
+    main{padding:18px 0 40px;}
+    .grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:14px;}
+    @media (max-width:900px){ .grid{grid-template-columns:1fr;} header{position:static;} }
+
+    .card{
+      background: linear-gradient(180deg, rgba(18,26,43,.92), rgba(18,26,43,.80));
+      border:1px solid rgba(34,48,85,.7);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding:14px 14px 12px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      border-bottom: 1px solid rgba(34,48,85,.7);
+    }
+    .card .bd{padding:14px;}
+    .btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+    button{
+      appearance:none; border:1px solid rgba(34,48,85,.9);
+      background: rgba(16,24,40,.75);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:13px;
+    }
+    button:hover{border-color: rgba(122,167,255,.9)}
+    button.primary{background: rgba(122,167,255,.18); border-color: rgba(122,167,255,.7)}
+    button.danger{background: rgba(255,107,107,.12); border-color: rgba(255,107,107,.6)}
+    button.ok{background: rgba(49,208,170,.12); border-color: rgba(49,208,170,.6)}
+    button:disabled{opacity:.55; cursor:not-allowed}
+
+    .row{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
+    @media (max-width:520px){ .row{grid-template-columns:1fr;} }
+
+    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px;}
+    input, textarea, select{
+      width:100%;
+      padding:10px 11px;
+      border-radius: 12px;
+      border:1px solid rgba(34,48,85,.8);
+      background: rgba(10,14,25,.6);
+      color:var(--text);
+      outline:none;
+      font-size:13px;
+    }
+    textarea{min-height:84px; resize:vertical; line-height:1.45}
+    input:focus, textarea:focus, select:focus{border-color: rgba(122,167,255,.8)}
+    .hint{color:var(--muted); font-size:12px; margin-top:8px; line-height:1.45}
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(34,48,85,.85);
+      background: rgba(10,14,25,.45);
+      color:var(--muted); font-size:12px; font-weight:600;
+    }
+    .list{display:flex; flex-direction:column; gap:10px;}
+    .day{
+      border:1px solid rgba(34,48,85,.8);
+      border-radius: 14px;
+      overflow:hidden;
+      background: rgba(10,14,25,.35);
+    }
+    .day .dayhd{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 12px;
+      gap:10px;
+      border-bottom:1px solid rgba(34,48,85,.65);
+    }
+    .daytitle{
+      display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+    }
+    .daytitle b{font-size:14px}
+    .daytitle span{color:var(--muted); font-size:12px}
+    .items{padding:10px 10px 12px; display:flex; flex-direction:column; gap:8px;}
+    .item{
+      border:1px solid rgba(34,48,85,.75);
+      border-radius: 14px;
+      padding:10px 10px;
+      background: rgba(18,26,43,.55);
+      display:grid;
+      grid-template-columns: 24px 1fr auto;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .drag{
+      width:24px; height:24px;
+      border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      border:1px dashed rgba(142,160,201,.55);
+      color:rgba(142,160,201,.85);
+      cursor:grab;
+      user-select:none;
+      margin-top:2px;
+    }
+    .meta{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+    .time{font-weight:800; font-size:12px; color:#cfe0ff}
+    .spot{font-weight:800; font-size:13px}
+    .loc{font-size:12px; color:var(--muted)}
+    .note{margin-top:6px; font-size:12px; color:rgba(233,238,252,.86); line-height:1.45; white-space:pre-wrap}
+    .actions{display:flex; gap:6px;}
+    .actions button{padding:8px 10px; border-radius:12px; font-size:12px}
+    .badge{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:5px 9px; border-radius:999px;
+      border:1px solid rgba(34,48,85,.85);
+      background: rgba(122,167,255,.10);
+      color: #cfe0ff; font-size:12px; font-weight:700;
+    }
+    .toast{
+      position: fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background: rgba(18,26,43,.92);
+      border:1px solid rgba(34,48,85,.85);
+      border-radius: 999px;
+      padding:10px 14px;
+      box-shadow: var(--shadow);
+      color: var(--text);
+      font-size: 13px;
+      opacity:0; pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+      z-index:99;
+    }
+    .toast.show{opacity:1; transform: translateX(-50%) translateY(-4px);}
+    .small{font-size:12px; color:var(--muted);}
+    .hr{height:1px; background: rgba(34,48,85,.6); margin:12px 0;}
+    .topbar{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="topbar">
+        <h1>삿포로 여행 일정 공유 플래너</h1>
+        <span class="pill" id="shareStatus">공유 링크: 아직 생성 전</span>
+      </div>
+      <p class="sub">
+        일정 추가/수정/삭제/드래그 정렬 가능 · <b>공유 링크 만들기</b>로 친구에게 그대로 전달하세요.<br/>
+        (참고) 링크에 데이터가 들어가기 때문에 너무 길어지면 “JSON 내보내기”로 공유하는 편이 좋아요.
+      </p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <!-- Planner -->
+      <section class="card">
+        <div class="hd">
+          <div>
+            <div class="badge">일정</div>
+            <div class="small" style="margin-top:6px;">날짜별로 일정이 정리돼요. 항목 왼쪽 점선 핸들을 드래그하면 순서 변경!</div>
+          </div>
+          <div class="btns">
+            <button class="primary" id="btnShare">공유 링크 만들기</button>
+            <button class="ok" id="btnCopy" disabled>링크 복사</button>
+            <button id="btnExport">JSON 내보내기</button>
+            <button id="btnImport">JSON 불러오기</button>
+            <button class="danger" id="btnReset">초기화</button>
+          </div>
+        </div>
+        <div class="bd">
+          <div id="planList" class="list"></div>
+          <div class="hint" id="emptyHint" style="display:none;">
+            아직 일정이 없어요. 오른쪽에서 일정을 추가해보세요 🙂
+          </div>
+        </div>
+      </section>
+
+      <!-- Form -->
+      <aside class="card">
+        <div class="hd">
+          <div>
+            <div class="badge">새 일정 추가</div>
+            <div class="small" style="margin-top:6px;">추가 후에도 언제든 수정할 수 있어요.</div>
+          </div>
+          <div class="btns">
+            <button class="primary" id="btnAdd">추가</button>
+            <button id="btnClear">입력 지우기</button>
+          </div>
+        </div>
+        <div class="bd">
+          <div class="row">
+            <div>
+              <label>날짜 (YYYY-MM-DD)</label>
+              <input id="fDate" type="date" />
+            </div>
+            <div>
+              <label>시간</label>
+              <input id="fTime" type="time" />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <div>
+              <label>장소/스팟 이름</label>
+              <input id="fTitle" placeholder="예: 오도리 공원 야경 산책" />
+            </div>
+            <div>
+              <label>카테고리</label>
+              <select id="fTag">
+                <option value="Food">Food</option>
+                <option value="Cafe">Cafe</option>
+                <option value="Bar">Bar</option>
+                <option value="Sight">Sight</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Onsen">Onsen</option>
+                <option value="Transit">Transit</option>
+                <option value="Other" selected>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <label>주소/지역 (선택)</label>
+            <input id="fLocation" placeholder="예: Sapporo, Susukino / 주소 / 역 이름 등" />
+          </div>
+
+          <div style="margin-top:10px;">
+            <label>메모 (선택)</label>
+            <textarea id="fNote" placeholder="예: 사진 스팟은 여기! 예약 필요 여부, 추천 메뉴, 이동 팁 등"></textarea>
+          </div>
+
+          <div class="hr"></div>
+          <div class="hint">
+            ✅ 친구와 협업 팁: 한 명이 “공유 링크 만들기”로 링크를 뽑아 공유 → 다른 친구가 그 링크로 들어와 수정 → 다시 링크 만들어 공유 (링크가 ‘상태’를 담는 방식)
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---------- Utilities ----------
+    const $ = (id) => document.getElementById(id);
+    const toastEl = $("toast");
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      setTimeout(()=>toastEl.classList.remove("show"), 1600);
+    }
+    function uid(){
+      return Math.random().toString(36).slice(2,10) + "-" + Date.now().toString(36);
+    }
+
+    // ---------- Data Model ----------
+    // plan = { days: { "YYYY-MM-DD": [ item, ... ] }, meta: { title } }
+    // item = { id, time, title, tag, location, note }
+    const STORAGE_KEY = "sapporo_trip_plan_v1";
+
+    const defaultPlan = {
+      meta: { title: "Sapporo Trip" },
+      days: {}
+    };
+
+    let plan = structuredClone(defaultPlan);
+
+    // ---------- Base64 URL-safe encode/decode ----------
+    function toBase64Url(str){
+      const bytes = new TextEncoder().encode(str);
+      let bin = "";
+      bytes.forEach(b => bin += String.fromCharCode(b));
+      const b64 = btoa(bin);
+      return b64.replaceAll("+","-").replaceAll("/","_").replaceAll("=","");
+    }
+    function fromBase64Url(b64url){
+      const b64 = b64url.replaceAll("-","+").replaceAll("_","/") + "===".slice((b64url.length + 3) % 4);
+      const bin = atob(b64);
+      const bytes = new Uint8Array([...bin].map(c => c.charCodeAt(0)));
+      return new TextDecoder().decode(bytes);
+    }
+
+    // ---------- Load: URL -> localStorage -> default ----------
+    function loadFromUrl(){
+      // use hash: #p=...
+      const h = location.hash.startsWith("#") ? location.hash.slice(1) : "";
+      const params = new URLSearchParams(h);
+      const p = params.get("p");
+      if(!p) return false;
+      try{
+        const json = fromBase64Url(p);
+        const obj = JSON.parse(json);
+        if(obj && typeof obj === "object" && obj.days) {
+          plan = obj;
+          toast("공유 링크에서 일정을 불러왔어요!");
+          setShareStatus(true);
+          return true;
+        }
+      }catch(e){
+        console.warn(e);
+        toast("링크 데이터 읽기에 실패했어요.");
+      }
+      return false;
+    }
+
+    function loadFromStorage(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return false;
+        const obj = JSON.parse(raw);
+        if(obj && typeof obj === "object" && obj.days){
+          plan = obj;
+          return true;
+        }
+      }catch(e){
+        console.warn(e);
+      }
+      return false;
+    }
+
+    function saveToStorage(){
+      try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(plan));
+      }catch(e){
+        console.warn(e);
+      }
+    }
+
+    // ---------- Rendering ----------
+    function dayKeysSorted(){
+      return Object.keys(plan.days).sort();
+    }
+
+    function fmtDateLabel(yyyyMmDd){
+      // Keep simple: "01/13 (Tue)" like
+      const d = new Date(yyyyMmDd + "T00:00:00");
+      if(Number.isNaN(d.getTime())) return yyyyMmDd;
+      const dow = ["일","월","화","수","목","금","토"][d.getDay()];
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${mm}/${dd} (${dow})`;
+    }
+
+    function render(){
+      const list = $("planList");
+      list.innerHTML = "";
+      const keys = dayKeysSorted();
+
+      $("emptyHint").style.display = (keys.length === 0) ? "block" : "none";
+
+      keys.forEach(dateKey => {
+        const dayBox = document.createElement("div");
+        dayBox.className = "day";
+
+        const header = document.createElement("div");
+        header.className = "dayhd";
+
+        const left = document.createElement("div");
+        left.className = "daytitle";
+        const b = document.createElement("b");
+        b.textContent = fmtDateLabel(dateKey);
+        const s = document.createElement("span");
+        s.textContent = dateKey;
+        left.appendChild(b);
+        left.appendChild(s);
+
+        const right = document.createElement("div");
+        right.className = "btns";
+        const addBtn = document.createElement("button");
+        addBtn.textContent = "이 날짜로 입력값 설정";
+        addBtn.onclick = () => {
+          $("fDate").value = dateKey;
+          toast("날짜를 설정했어요.");
+        };
+        const delBtn = document.createElement("button");
+        delBtn.className = "danger";
+        delBtn.textContent = "이 날짜 전체 삭제";
+        delBtn.onclick = () => {
+          if(confirm(`${dateKey}의 일정 전체를 삭제할까요?`)){
+            delete plan.days[dateKey];
+            saveToStorage();
+            render();
+            toast("삭제 완료");
+          }
+        };
+        right.appendChild(addBtn);
+        right.appendChild(delBtn);
+
+        header.appendChild(left);
+        header.appendChild(right);
+
+        const itemsWrap = document.createElement("div");
+        itemsWrap.className = "items";
+        itemsWrap.dataset.date = dateKey;
+
+        // Sort items by time (stable-ish). Keep empty time at end.
+        const items = plan.days[dateKey] || [];
+        items.sort((a,b)=>{
+          const at = a.time || "99:99";
+          const bt = b.time || "99:99";
+          return at.localeCompare(bt);
+        });
+
+        items.forEach((it, idx) => {
+          const itemEl = document.createElement("div");
+          itemEl.className = "item";
+          itemEl.draggable = true;
+          itemEl.dataset.id = it.id;
+          itemEl.dataset.date = dateKey;
+
+          const drag = document.createElement("div");
+          drag.className = "drag";
+          drag.title = "드래그해서 순서 변경";
+          drag.textContent = "⋮⋮";
+
+          const body = document.createElement("div");
+
+          const meta = document.createElement("div");
+          meta.className = "meta";
+          const time = document.createElement("span");
+          time.className = "time";
+          time.textContent = it.time ? it.time : "시간 미정";
+          const tag = document.createElement("span");
+          tag.className = "pill";
+          tag.textContent = it.tag || "Other";
+          const spot = document.createElement("span");
+          spot.className = "spot";
+          spot.textContent = it.title || "(제목 없음)";
+
+          meta.appendChild(time);
+          meta.appendChild(tag);
+          meta.appendChild(spot);
+
+          const loc = document.createElement("div");
+          loc.className = "loc";
+          loc.textContent = it.location ? it.location : "";
+
+          const note = document.createElement("div");
+          note.className = "note";
+          note.textContent = it.note ? it.note : "";
+
+          body.appendChild(meta);
+          if(it.location) body.appendChild(loc);
+          if(it.note) body.appendChild(note);
+
+          const actions = document.createElement("div");
+          actions.className = "actions";
+
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "수정";
+          editBtn.onclick = () => {
+            $("fDate").value = dateKey;
+            $("fTime").value = it.time || "";
+            $("fTitle").value = it.title || "";
+            $("fTag").value = it.tag || "Other";
+            $("fLocation").value = it.location || "";
+            $("fNote").value = it.note || "";
+            // Store editing id
+            editing = { date: dateKey, id: it.id };
+            $("btnAdd").textContent = "수정 저장";
+            toast("수정 모드: 오른쪽에서 저장하세요");
+          };
+
+          const delBtn2 = document.createElement("button");
+          delBtn2.className = "danger";
+          delBtn2.textContent = "삭제";
+          delBtn2.onclick = () => {
+            if(confirm("이 항목을 삭제할까요?")){
+              plan.days[dateKey] = (plan.days[dateKey] || []).filter(x => x.id !== it.id);
+              if(plan.days[dateKey].length === 0) delete plan.days[dateKey];
+              saveToStorage();
+              render();
+              toast("삭제 완료");
+            }
+          };
+
+          actions.appendChild(editBtn);
+          actions.appendChild(delBtn2);
+
+          itemEl.appendChild(drag);
+          itemEl.appendChild(body);
+          itemEl.appendChild(actions);
+
+          // Drag & drop handlers
+          itemEl.addEventListener("dragstart", (e)=>{
+            e.dataTransfer.setData("text/plain", JSON.stringify({ date: dateKey, id: it.id }));
+            e.dataTransfer.effectAllowed = "move";
+            itemEl.style.opacity = "0.55";
+          });
+          itemEl.addEventListener("dragend", ()=>{
+            itemEl.style.opacity = "1";
+          });
+
+          itemsWrap.appendChild(itemEl);
+        });
+
+        // Drop area: reorder within a date
+        itemsWrap.addEventListener("dragover", (e)=>{
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+        });
+        itemsWrap.addEventListener("drop", (e)=>{
+          e.preventDefault();
+          const payload = e.dataTransfer.getData("text/plain");
+          if(!payload) return;
+          let dragged;
+          try{ dragged = JSON.parse(payload); } catch { return; }
+
+          // Only allow reorder within same date in this simple version
+          if(dragged.date !== dateKey) {
+            toast("현재 버전에서는 같은 날짜 안에서만 드래그 정렬이 가능해요.");
+            return;
+          }
+
+          const items = plan.days[dateKey] || [];
+          const fromIdx = items.findIndex(x => x.id === dragged.id);
+          if(fromIdx < 0) return;
+
+          // find closest target item
+          const target = e.target.closest(".item");
+          if(!target) return;
+
+          const toId = target.dataset.id;
+          const toIdx = items.findIndex(x => x.id === toId);
+          if(toIdx < 0 || toIdx === fromIdx) return;
+
+          const [moved] = items.splice(fromIdx, 1);
+          items.splice(toIdx, 0, moved);
+          plan.days[dateKey] = items;
+
+          saveToStorage();
+          render();
+          toast("순서를 변경했어요.");
+        });
+
+        dayBox.appendChild(header);
+        dayBox.appendChild(itemsWrap);
+        list.appendChild(dayBox);
+      });
+
+      // Update share status based on hash existence
+      const hasHash = location.hash.includes("p=");
+      setShareStatus(hasHash);
+    }
+
+    // ---------- Add / Edit ----------
+    let editing = null; // {date, id}
+
+    function clearForm(){
+      $("fTime").value = "";
+      $("fTitle").value = "";
+      $("fTag").value = "Other";
+      $("fLocation").value = "";
+      $("fNote").value = "";
+      editing = null;
+      $("btnAdd").textContent = "추가";
+    }
+
+    function upsertItem(){
+      const date = $("fDate").value;
+      const time = $("fTime").value.trim();
+      const title = $("fTitle").value.trim();
+      const tag = $("fTag").value;
+      const location = $("fLocation").value.trim();
+      const note = $("fNote").value.trim();
+
+      if(!date){
+        toast("날짜를 선택해주세요.");
+        return;
+      }
+      if(!title){
+        toast("장소/스팟 이름은 꼭 입력해주세요.");
+        return;
+      }
+
+      plan.days[date] = plan.days[date] || [];
+
+      if(editing && editing.date === date){
+        const idx = plan.days[date].findIndex(x => x.id === editing.id);
+        if(idx >= 0){
+          plan.days[date][idx] = { ...plan.days[date][idx], time, title, tag, location, note };
+          toast("수정 저장 완료!");
+        } else {
+          // fallback: treat as new
+          plan.days[date].push({ id: uid(), time, title, tag, location, note });
+          toast("추가 완료!");
+        }
+      } else if(editing && editing.date !== date){
+        // moving across date is allowed via edit
+        const prevDate = editing.date;
+        const prevItems = plan.days[prevDate] || [];
+        const prevIdx = prevItems.findIndex(x => x.id === editing.id);
+        if(prevIdx >= 0){
+          const old = prevItems.splice(prevIdx, 1)[0];
+          if(prevItems.length === 0) delete plan.days[prevDate];
+          plan.days[date].push({ ...old, time, title, tag, location, note });
+          toast("다른 날짜로 이동 + 수정 저장!");
+        } else {
+          plan.days[date].push({ id: uid(), time, title, tag, location, note });
+          toast("추가 완료!");
+        }
+      } else {
+        plan.days[date].push({ id: uid(), time, title, tag, location, note });
+        toast("추가 완료!");
+      }
+
+      saveToStorage();
+      clearForm();
+      render();
+    }
+
+    // ---------- Share Link ----------
+    function setShareStatus(enabled){
+      const pill = $("shareStatus");
+      if(enabled){
+        pill.textContent = "공유 링크: 생성됨 (URL에 포함)";
+      } else {
+        pill.textContent = "공유 링크: 아직 생성 전";
+      }
+      $("btnCopy").disabled = !enabled;
+    }
+
+    function makeShareLink(){
+      // Encode plan into hash param
+      const json = JSON.stringify(plan);
+      const encoded = toBase64Url(json);
+      const params = new URLSearchParams();
+      params.set("p", encoded);
+      location.hash = params.toString();
+      setShareStatus(true);
+      toast("공유 링크를 만들었어요!");
+    }
+
+    async function copyLink(){
+      const url = location.href;
+      try{
+        await navigator.clipboard.writeText(url);
+        toast("링크를 복사했어요!");
+      }catch(e){
+        // fallback
+        prompt("복사에 실패했어요. 아래를 직접 복사해주세요:", url);
+      }
+    }
+
+    // ---------- Import / Export ----------
+    function exportJson(){
+      const blob = new Blob([JSON.stringify(plan, null, 2)], {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "sapporo-trip-plan.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+      toast("JSON을 저장했어요.");
+    }
+
+    function importJson(){
+      const inp = document.createElement("input");
+      inp.type = "file";
+      inp.accept = "application/json";
+      inp.onchange = async () => {
+        const file = inp.files?.[0];
+        if(!file) return;
+        const text = await file.text();
+        try{
+          const obj = JSON.parse(text);
+          if(!obj || typeof obj !== "object" || !obj.days){
+            toast("형식이 올바르지 않아요.");
+            return;
+          }
+          plan = obj;
+          saveToStorage();
+          render();
+          toast("불러오기 완료!");
+        }catch(e){
+          toast("JSON 파싱 실패");
+        }
+      };
+      inp.click();
+    }
+
+    function resetAll(){
+      if(!confirm("모든 일정을 초기화할까요? (되돌릴 수 없어요)")) return;
+      plan = structuredClone(defaultPlan);
+      clearForm();
+      localStorage.removeItem(STORAGE_KEY);
+      // remove share hash
+      history.replaceState(null, "", location.pathname + location.search);
+      setShareStatus(false);
+      render();
+      toast("초기화 완료");
+    }
+
+    // ---------- Wire up ----------
+    $("btnAdd").addEventListener("click", upsertItem);
+    $("btnClear").addEventListener("click", ()=>{
+      clearForm();
+      toast("입력을 지웠어요.");
+    });
+
+    $("btnShare").addEventListener("click", makeShareLink);
+    $("btnCopy").addEventListener("click", copyLink);
+    $("btnExport").addEventListener("click", exportJson);
+    $("btnImport").addEventListener("click", importJson);
+    $("btnReset").addEventListener("click", resetAll);
+
+    // ---------- Init ----------
+    (function init(){
+      // 1) URL hash first
+      const loadedFromUrl = loadFromUrl();
+
+      // 2) otherwise load storage
+      if(!loadedFromUrl) loadFromStorage();
+
+      // default date: today if empty (KST-based by user's browser)
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      $("fDate").value = `${yyyy}-${mm}-${dd}`;
+
+      // Update share button state if hash exists
+      const hasHash = location.hash.includes("p=");
+      setShareStatus(hasHash);
+
+      render();
+    })();
+  </script>
+</body>
+</html>
