@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>삿포로 여행 일정</title>
+  <title>˚₊✩‧🐣 sapporo 🐹✧˳⁺⁎</title>
   <style>
     :root{
       --bg1:#eaf6ff;
@@ -72,7 +72,7 @@
       line-height:1.45;
     }
 
-    /* NEW: Header character image */
+    /* Header character image */
     .heroChar{
       width:66px; height:66px;
       object-fit:contain;
@@ -145,6 +145,7 @@
       background: rgba(255,255,255,.7);
       color:var(--muted); font-size:12px; font-weight:800;
       box-shadow: 0 10px 18px rgba(79,140,255,.06);
+      white-space:nowrap;
     }
     .badge{
       display:inline-flex; align-items:center; gap:8px;
@@ -153,7 +154,6 @@
       background: rgba(79,140,255,.12);
       color:#2b4ea3; font-size:12px; font-weight:900;
     }
-    /* NEW: Day badge */
     .dayBadge{
       display:inline-flex; align-items:center; gap:6px;
       padding:6px 10px;
@@ -164,6 +164,7 @@
       font-size:12px;
       font-weight:950;
       letter-spacing:.2px;
+      white-space:nowrap;
     }
 
     .small{font-size:12px; color:var(--muted);}
@@ -235,53 +236,43 @@
       z-index:99;
     }
     .toast.show{opacity:1; transform: translateX(-50%) translateY(-4px);}
-
     .hr{height:1px; background: rgba(207,227,255,.95); margin:12px 0;}
+
     /* 💋 Kiss button */
-.kissBtn{
-  border: 1px solid rgba(255,122,165,.6);
-  background: linear-gradient(180deg, #ffb6d5, #ff8fb8);
-  color: white;
-  font-weight: 900;
-  padding: 10px 14px;
-  border-radius: 999px;
-  cursor: pointer;
-  box-shadow: 0 10px 20px rgba(255,122,165,.35);
-  transition: transform .12s ease, box-shadow .12s ease;
-}
-.kissBtn:hover{
-  transform: translateY(-1px) scale(1.03);
-  box-shadow: 0 14px 26px rgba(255,122,165,.45);
-}
-.kissBtn:active{
-  transform: scale(.95);
-}
+    .kissBtn{
+      border: 1px solid rgba(255,122,165,.6);
+      background: linear-gradient(180deg, #ffb6d5, #ff8fb8);
+      color: white;
+      font-weight: 900;
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(255,122,165,.35);
+      transition: transform .12s ease, box-shadow .12s ease;
+      white-space:nowrap;
+    }
+    .kissBtn:hover{
+      transform: translateY(-1px) scale(1.03);
+      box-shadow: 0 14px 26px rgba(255,122,165,.45);
+    }
+    .kissBtn:active{ transform: scale(.95); }
 
-/* 💖 Floating hearts */
-.heart{
-  position: fixed;
-  font-size: 20px;
-  pointer-events: none;
-  animation: floatUp 1.4s ease-out forwards;
-  z-index: 9999;
-}
-
-@keyframes floatUp{
-  0%{
-    opacity: 0;
-    transform: translateY(0) scale(.6);
-  }
-  20%{
-    opacity: 1;
-  }
-  100%{
-    opacity: 0;
-    transform: translateY(-80px) scale(1.3);
-  }
-}
-
+    /* 💖 Floating hearts */
+    .heart{
+      position: fixed;
+      font-size: 20px;
+      pointer-events: none;
+      animation: floatUp 1.4s ease-out forwards;
+      z-index: 9999;
+    }
+    @keyframes floatUp{
+      0%{ opacity: 0; transform: translateY(0) scale(.6); }
+      20%{ opacity: 1; }
+      100%{ opacity: 0; transform: translateY(-80px) scale(1.3); }
+    }
   </style>
 </head>
+
 <body>
   <div class="snow"></div>
 
@@ -289,13 +280,17 @@
     <div class="wrap">
       <div class="top">
         <h1>
-          <!-- 변경 1) 눈사람 대신 캐릭터 이미지 -->
           <img class="heroChar" src="character.png" alt="캐릭터" />
           햐무와 챠무의 삿포로 여행❄️
         </h1>
-        <span class="pill" id="shareStatus">공유 링크: 아직 생성 전</span>
-        <button id="kissBtn" class="kissBtn">💗뽀뽀 기부하기</button>
+
+        <!-- 오른쪽 영역: 상태 + 뽀뽀 버튼 -->
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <span class="pill" id="shareStatus">공유 링크: 아직 생성 전</span>
+          <button id="kissBtn" class="kissBtn">💗 뽀뽀 기부하기</button>
+        </div>
       </div>
+
       <p class="sub">
         일정 추가/수정/삭제/드래그 정렬 가능 · <b>공유 링크 만들기</b>로 친구에게 그대로 전달하세요.<br/>
         Donation: 제작자에게 뽀뽀를 선물해주세요 😚
@@ -335,6 +330,7 @@
             <button id="btnClear">입력 지우기</button>
           </div>
         </div>
+
         <div class="bd">
           <div class="row">
             <div>
@@ -380,8 +376,9 @@
           </div>
 
           <div class="hr"></div>
+
           <div class="hint">
-            ✅ 공유 방식: 현재 일정은 “공유 링크”에 담겨요. 친구가 링크로 들어와 수정한 뒤, 다시 공유 링크를 만들어 보내면 최신 버전으로 맞출 수 있어요.
+            ✅ 옵션 B(자동 동기화): 이 페이지 URL에 <b>#room=코드</b>가 붙고, 같은 링크로 들어온 친구들끼리 대략 10초 단위로 동기화돼요.
           </div>
         </div>
       </aside>
@@ -390,476 +387,566 @@
 
   <div class="toast" id="toast"></div>
 
-<script>
-  // =========================
-  //  옵션 B: Polling Sync
-  // =========================
-  const SYNC_ENDPOINT = "https://script.google.com/macros/s/AKfycbzXxjneEodr_ZhTgMe-Rsp0Y2v51TCI_Eoh2cizc0nRIBxPEhjCJDB9mqo-OGVU4IY/exec"; // <- 여기에 Apps Script URL 넣기
-  const POLL_MS = 10000; // 10초
-  const SAVE_DEBOUNCE_MS = 800;
+  <script>
+    // =========================
+    //  옵션 B: Polling Sync (CORS-safe)
+    //  - GET: JSONP
+    //  - POST: no-cors (send only)
+    //  - localStorage backup
+    // =========================
 
-  const $ = (id) => document.getElementById(id);
-  const toastEl = $("toast");
-  function toast(msg){
-    toastEl.textContent = msg;
-    toastEl.classList.add("show");
-    setTimeout(()=>toastEl.classList.remove("show"), 1400);
-  }
-  function uid(){
-    return Math.random().toString(36).slice(2,10) + "-" + Date.now().toString(36);
-  }
+    // ✅ 너의 Apps Script Web App URL
+    const SYNC_ENDPOINT = "https://script.google.com/macros/s/AKfycbzXxjneEodr_ZhTgMe-Rsp0Y2v51TCI_Eoh2cizc0nRIBxPEhjCJDB9mqo-OGVU4IY/exec";
 
-  // 카테고리
-  const CAT = {
-    Food: { label: "음식", emoji: "🍣" },
-    Cafe: { label: "카페", emoji: "☕️" },
-    Sight: { label: "관광", emoji: "🏔️" },
-    Shopping: { label: "쇼핑", emoji: "🛍️" },
-    Transit: { label: "교통", emoji: "🚇" }
-  };
-  function catText(tag){
-    const c = CAT[tag] || {label:"기타", emoji:"✨"};
-    return `${c.emoji} ${c.label}`;
-  }
+    const POLL_MS = 10000;          // 10초마다 서버 확인
+    const SAVE_DEBOUNCE_MS = 800;   // 입력 후 0.8초 뒤 저장
 
-  // plan 모델
-  let plan = { days: {} };
+    const $ = (id) => document.getElementById(id);
 
-  // 서버 버전/업데이트 시간
-  let serverVersion = 1;
-  let lastUpdatedAt = 0;
-
-  // 현재 방 코드
-  function getRoomFromHash(){
-    const h = location.hash.startsWith("#") ? location.hash.slice(1) : "";
-    const params = new URLSearchParams(h);
-    return (params.get("room") || "").trim();
-  }
-  function setRoomToHash(room){
-    const h = location.hash.startsWith("#") ? location.hash.slice(1) : "";
-    const params = new URLSearchParams(h);
-    params.set("room", room);
-    location.hash = params.toString();
-  }
-  function ensureRoom(){
-    let room = getRoomFromHash();
-    if(!room){
-      room = Math.random().toString(36).slice(2,8); // 간단 방코드
-      setRoomToHash(room);
+    const toastEl = $("toast");
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      setTimeout(()=>toastEl.classList.remove("show"), 1400);
     }
-    return room;
-  }
+    function uid(){
+      return Math.random().toString(36).slice(2,10) + "-" + Date.now().toString(36);
+    }
 
-  // 서버 I/O
-  async function fetchServerPlan(room){
-    const url = `${SYNC_ENDPOINT}?room=${encodeURIComponent(room)}`;
-    const r = await fetch(url, { method:"GET" });
-    const data = await r.json();
-    if(!data.ok) throw new Error(data.error || "fetch_failed");
-    return data;
-  }
+    // 카테고리
+    const CAT = {
+      Food: { label: "음식", emoji: "🍣" },
+      Cafe: { label: "카페", emoji: "☕️" },
+      Sight: { label: "관광", emoji: "🏔️" },
+      Shopping: { label: "쇼핑", emoji: "🛍️" },
+      Transit: { label: "교통", emoji: "🚇" }
+    };
+    function catText(tag){
+      const c = CAT[tag] || {label:"기타", emoji:"✨"};
+      return `${c.emoji} ${c.label}`;
+    }
 
-  async function pushServerPlan(room){
-    const url = `${SYNC_ENDPOINT}?room=${encodeURIComponent(room)}`;
-    const payload = { plan, version: serverVersion };
-    const r = await fetch(url, {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify(payload)
-    });
-    const data = await r.json();
-    if(!data.ok) throw new Error(data.error || "save_failed");
-    // 서버가 부여한 최신 버전 반영
-    serverVersion = data.version || (serverVersion + 1);
-    lastUpdatedAt = data.updatedAt || Date.now();
-    return data;
-  }
+    // plan 모델
+    let plan = { days: {} };
 
-  // polling
-  let pollTimer = null;
-  let isPushing = false;
+    // 서버 버전/업데이트 시간 (GET/POST 동기 기준)
+    let serverVersion = 1;
+    let lastUpdatedAt = 0;
 
-  async function pollOnce(){
-    const room = ensureRoom();
-    try{
-      const data = await fetchServerPlan(room);
-
-      // 서버가 더 최신이면 반영
-      const incomingVersion = data.version || 1;
-      if(incomingVersion > serverVersion){
-        plan = data.plan || { days:{} };
-        serverVersion = incomingVersion;
-        lastUpdatedAt = data.updatedAt || Date.now();
-        render();
-        toast("친구의 변경사항을 반영했어요 ❄️");
+    // ---- room 관리 ----
+    function getRoomFromHash(){
+      const h = location.hash.startsWith("#") ? location.hash.slice(1) : "";
+      const params = new URLSearchParams(h);
+      return (params.get("room") || "").trim();
+    }
+    function setRoomToHash(room){
+      const h = location.hash.startsWith("#") ? location.hash.slice(1) : "";
+      const params = new URLSearchParams(h);
+      params.set("room", room);
+      location.hash = params.toString();
+    }
+    function ensureRoom(){
+      let room = getRoomFromHash();
+      if(!room){
+        room = Math.random().toString(36).slice(2,8);
+        setRoomToHash(room);
       }
-      setShareStatus(true);
-    }catch(e){
-      console.warn(e);
-      // 네트워크 잠깐 끊겨도 UX 망치지 않기
+      return room;
     }
-  }
 
-  function startPolling(){
-    if(pollTimer) clearInterval(pollTimer);
-    pollTimer = setInterval(pollOnce, POLL_MS);
-  }
+    // ---- localStorage 백업 ----
+    const LS_KEY = "sapporo_trip_room_cache_v1";
+    function saveLocal(room){
+      try{
+        localStorage.setItem(`${LS_KEY}:${room}`, JSON.stringify({ plan, serverVersion, lastUpdatedAt }));
+      }catch(e){}
+    }
+    function loadLocal(room){
+      try{
+        const raw = localStorage.getItem(`${LS_KEY}:${room}`);
+        if(!raw) return false;
+        const obj = JSON.parse(raw);
+        if(obj?.plan?.days){
+          plan = obj.plan;
+          serverVersion = obj.serverVersion || serverVersion;
+          lastUpdatedAt = obj.lastUpdatedAt || lastUpdatedAt;
+          return true;
+        }
+      }catch(e){}
+      return false;
+    }
 
-  // 저장 디바운스
-  let saveTimer = null;
-  function scheduleSave(){
-    if(isPushing) return;
-    if(saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(async ()=>{
+    // ---- 서버 I/O ----
+    // ✅ GET: JSONP로 CORS 우회
+    function fetchServerPlan(room){
+      return new Promise((resolve, reject) => {
+        const cbName = "__jsonp_cb_" + Math.random().toString(36).slice(2);
+        const url = `${SYNC_ENDPOINT}?room=${encodeURIComponent(room)}&callback=${cbName}`;
+
+        let done = false;
+
+        window[cbName] = (data) => {
+          if(done) return;
+          done = true;
+          try { delete window[cbName]; } catch(e) { window[cbName] = undefined; }
+          script.remove();
+
+          if(!data?.ok) reject(new Error(data?.error || "fetch_failed"));
+          else resolve(data);
+        };
+
+        const script = document.createElement("script");
+        script.src = url;
+        script.onerror = () => {
+          if(done) return;
+          done = true;
+          try { delete window[cbName]; } catch(e) { window[cbName] = undefined; }
+          script.remove();
+          reject(new Error("jsonp_network_error"));
+        };
+
+        // 타임아웃
+        setTimeout(() => {
+          if(done) return;
+          done = true;
+          try { delete window[cbName]; } catch(e) { window[cbName] = undefined; }
+          script.remove();
+          reject(new Error("jsonp_timeout"));
+        }, 8000);
+
+        document.body.appendChild(script);
+      });
+    }
+
+    // ✅ POST: no-cors로 "보내기만" (응답은 못 읽음)
+    async function pushServerPlan(room){
+      const url = `${SYNC_ENDPOINT}?room=${encodeURIComponent(room)}`;
+      const payload = { plan, version: serverVersion };
+
+      // 응답은 opaque라 확인 불가 → 다음 polling(GET)에서 실제 저장 여부 확인됨
+      await fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      // UX를 위해 로컬 버전 먼저 증가 + 백업
+      serverVersion += 1;
+      lastUpdatedAt = Date.now();
+      saveLocal(room);
+
+      return { ok:true, plan, version: serverVersion, updatedAt: lastUpdatedAt };
+    }
+
+    // ---- polling ----
+    let pollTimer = null;
+    let isPushing = false;
+
+    async function pollOnce(){
       const room = ensureRoom();
       try{
-        isPushing = true;
-        await pushServerPlan(room);
+        const data = await fetchServerPlan(room);
+        const incomingVersion = data.version || 1;
+
+        // 서버가 더 최신이면 반영
+        if(incomingVersion > serverVersion){
+          plan = data.plan || { days:{} };
+          serverVersion = incomingVersion;
+          lastUpdatedAt = data.updatedAt || Date.now();
+          saveLocal(room);
+          render();
+          toast("친구의 변경사항을 반영했어요 ❄️");
+        }
         setShareStatus(true);
       }catch(e){
         console.warn(e);
-        toast("저장에 실패했어요(네트워크 확인)");
-      } finally{
-        isPushing = false;
       }
-    }, SAVE_DEBOUNCE_MS);
-  }
-
-  // UI: 공유 상태/링크
-  function setShareStatus(enabled){
-    const pill = $("shareStatus");
-    pill.textContent = enabled ? "공유(동기화) ON ❄️" : "공유 링크: 아직 생성 전";
-    $("btnCopy").disabled = !enabled;
-  }
-  function makeShareLink(){
-    // 옵션 B에서는 room 링크만 공유하면 됨
-    ensureRoom();
-    setShareStatus(true);
-    toast("이 링크만 공유하면 같이 편집돼요!");
-  }
-  async function copyLink(){
-    const url = location.href;
-    try{
-      await navigator.clipboard.writeText(url);
-      toast("링크를 복사했어요!");
-    }catch(e){
-      prompt("복사에 실패했어요. 아래를 직접 복사해주세요:", url);
     }
-  }
 
-  // 렌더링
-  function dayKeysSorted(){ return Object.keys(plan.days).sort(); }
+    function startPolling(){
+      if(pollTimer) clearInterval(pollTimer);
+      pollTimer = setInterval(pollOnce, POLL_MS);
+    }
 
-  function fmtDateLabel(yyyyMmDd){
-    const d = new Date(yyyyMmDd + "T00:00:00");
-    if(Number.isNaN(d.getTime())) return yyyyMmDd;
-    const dow = ["일","월","화","수","목","금","토"][d.getDay()];
-    const mm = String(d.getMonth()+1).padStart(2,"0");
-    const dd = String(d.getDate()).padStart(2,"0");
-    return `${mm}/${dd} (${dow})`;
-  }
+    // ---- 저장 디바운스 ----
+    let saveTimer = null;
+    function scheduleSave(){
+      if(isPushing) return;
+      if(saveTimer) clearTimeout(saveTimer);
 
-  function timeLabel(it){
-    const s = (it.start || "").trim();
-    const e = (it.end || "").trim();
-    if(s && e) return `${s} – ${e}`;
-    if(s) return s;
-    if(e) return `~ ${e}`;
-    return "시간 미정";
-  }
-
-  function sortItems(items){
-    items.sort((a,b)=>{
-      const at = (a.start || "99:99");
-      const bt = (b.start || "99:99");
-      const c = at.localeCompare(bt);
-      if(c !== 0) return c;
-      return (a.title || "").localeCompare(b.title || "");
-    });
-  }
-
-  let editing = null;
-
-  function render(){
-    const list = $("planList");
-    list.innerHTML = "";
-    const keys = dayKeysSorted();
-    $("emptyHint").style.display = (keys.length === 0) ? "block" : "none";
-
-    keys.forEach((dateKey, i) => {
-      const dayNumber = i + 1;
-
-      const dayBox = document.createElement("div");
-      dayBox.className = "day";
-
-      const header = document.createElement("div");
-      header.className = "dayhd";
-
-      const left = document.createElement("div");
-      left.className = "daytitle";
-
-      const dayBadge = document.createElement("span");
-      dayBadge.className = "dayBadge";
-      dayBadge.textContent = `Day ${dayNumber}`;
-
-      const b = document.createElement("b");
-      b.textContent = fmtDateLabel(dateKey);
-
-      const s = document.createElement("span");
-      s.textContent = dateKey;
-
-      left.appendChild(dayBadge);
-      left.appendChild(b);
-      left.appendChild(s);
-      header.appendChild(left);
-
-      const itemsWrap = document.createElement("div");
-      itemsWrap.className = "items";
-      itemsWrap.dataset.date = dateKey;
-
-      const items = plan.days[dateKey] || [];
-      sortItems(items);
-
-      items.forEach((it) => {
-        const itemEl = document.createElement("div");
-        itemEl.className = "item";
-        itemEl.draggable = true;
-        itemEl.dataset.id = it.id;
-        itemEl.dataset.date = dateKey;
-
-        const drag = document.createElement("div");
-        drag.className = "drag";
-        drag.title = "드래그해서 순서 변경";
-        drag.textContent = "⋮⋮";
-
-        const body = document.createElement("div");
-
-        const meta = document.createElement("div");
-        meta.className = "meta";
-
-        const time = document.createElement("span");
-        time.className = "time";
-        time.textContent = timeLabel(it);
-
-        const tag = document.createElement("span");
-        tag.className = "pill";
-        tag.textContent = catText(it.tag);
-
-        const spot = document.createElement("span");
-        spot.className = "spot";
-        spot.textContent = it.title || "(제목 없음)";
-
-        meta.appendChild(time);
-        meta.appendChild(tag);
-        meta.appendChild(spot);
-
-        const loc = document.createElement("div");
-        loc.className = "loc";
-        loc.textContent = it.location ? it.location : "";
-
-        const note = document.createElement("div");
-        note.className = "note";
-        note.textContent = it.note ? it.note : "";
-
-        body.appendChild(meta);
-        if(it.location) body.appendChild(loc);
-        if(it.note) body.appendChild(note);
-
-        const actions = document.createElement("div");
-        actions.className = "actions";
-
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "수정";
-        editBtn.onclick = () => {
-          $("fDate").value = dateKey;
-          $("fStart").value = it.start || "";
-          $("fEnd").value = it.end || "";
-          $("fTitle").value = it.title || "";
-          $("fTag").value = it.tag || "Food";
-          $("fLocation").value = it.location || "";
-          $("fNote").value = it.note || "";
-          editing = { date: dateKey, id: it.id };
-          $("btnAdd").textContent = "수정 저장";
-          toast("수정 모드: 오른쪽에서 저장하세요");
-        };
-
-        const delBtn = document.createElement("button");
-        delBtn.className = "danger";
-        delBtn.textContent = "삭제";
-        delBtn.onclick = () => {
-          if(confirm("이 항목을 삭제할까요?")){
-            plan.days[dateKey] = (plan.days[dateKey] || []).filter(x => x.id !== it.id);
-            if(plan.days[dateKey].length === 0) delete plan.days[dateKey];
-            scheduleSave();
-            render();
-            toast("삭제 완료");
-          }
-        };
-
-        actions.appendChild(editBtn);
-        actions.appendChild(delBtn);
-
-        itemEl.appendChild(drag);
-        itemEl.appendChild(body);
-        itemEl.appendChild(actions);
-
-        // Drag reorder
-        itemEl.addEventListener("dragstart", (e)=>{
-          e.dataTransfer.setData("text/plain", JSON.stringify({ date: dateKey, id: it.id }));
-          e.dataTransfer.effectAllowed = "move";
-          itemEl.style.opacity = "0.60";
-        });
-        itemEl.addEventListener("dragend", ()=> itemEl.style.opacity = "1");
-
-        itemsWrap.appendChild(itemEl);
-      });
-
-      itemsWrap.addEventListener("dragover", (e)=>{
-        e.preventDefault();
-        e.dataTransfer.dropEffect = "move";
-      });
-      itemsWrap.addEventListener("drop", (e)=>{
-        e.preventDefault();
-        const payload = e.dataTransfer.getData("text/plain");
-        if(!payload) return;
-        let dragged;
-        try{ dragged = JSON.parse(payload); } catch { return; }
-        if(dragged.date !== dateKey) {
-          toast("같은 날짜 안에서만 드래그 정렬이 가능해요.");
-          return;
+      saveTimer = setTimeout(async ()=>{
+        const room = ensureRoom();
+        try{
+          isPushing = true;
+          await pushServerPlan(room);
+          setShareStatus(true);
+        }catch(e){
+          console.warn(e);
+          // 서버 저장 실패해도 로컬에는 남음
+          toast("저장에 실패했어요(네트워크 확인)");
+        } finally{
+          isPushing = false;
         }
+      }, SAVE_DEBOUNCE_MS);
+    }
+
+    // ---- UI: 공유 상태/링크 ----
+    function setShareStatus(enabled){
+      const pill = $("shareStatus");
+      pill.textContent = enabled ? "공유(동기화) ON ❄️" : "공유 링크: 아직 생성 전";
+      $("btnCopy").disabled = !enabled;
+    }
+
+    async function copyLink(){
+      const url = location.href;
+      try{
+        await navigator.clipboard.writeText(url);
+        toast("링크를 복사했어요!");
+      }catch(e){
+        prompt("복사에 실패했어요. 아래를 직접 복사해주세요:", url);
+      }
+    }
+
+    // ---- 렌더링 ----
+    function dayKeysSorted(){ return Object.keys(plan.days).sort(); }
+
+    function fmtDateLabel(yyyyMmDd){
+      const d = new Date(yyyyMmDd + "T00:00:00");
+      if(Number.isNaN(d.getTime())) return yyyyMmDd;
+      const dow = ["일","월","화","수","목","금","토"][d.getDay()];
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${mm}/${dd} (${dow})`;
+    }
+
+    function timeLabel(it){
+      const s = (it.start || "").trim();
+      const e = (it.end || "").trim();
+      if(s && e) return `${s} – ${e}`;
+      if(s) return s;
+      if(e) return `~ ${e}`;
+      return "시간 미정";
+    }
+
+    function sortItems(items){
+      items.sort((a,b)=>{
+        const at = (a.start || "99:99");
+        const bt = (b.start || "99:99");
+        const c = at.localeCompare(bt);
+        if(c !== 0) return c;
+        return (a.title || "").localeCompare(b.title || "");
+      });
+    }
+
+    let editing = null;
+
+    function render(){
+      const list = $("planList");
+      list.innerHTML = "";
+
+      const keys = dayKeysSorted();
+      $("emptyHint").style.display = (keys.length === 0) ? "block" : "none";
+
+      keys.forEach((dateKey, i) => {
+        const dayNumber = i + 1;
+
+        const dayBox = document.createElement("div");
+        dayBox.className = "day";
+
+        const header = document.createElement("div");
+        header.className = "dayhd";
+
+        const left = document.createElement("div");
+        left.className = "daytitle";
+
+        const dayBadge = document.createElement("span");
+        dayBadge.className = "dayBadge";
+        dayBadge.textContent = `Day ${dayNumber}`;
+
+        const b = document.createElement("b");
+        b.textContent = fmtDateLabel(dateKey);
+
+        const s = document.createElement("span");
+        s.textContent = dateKey;
+
+        left.appendChild(dayBadge);
+        left.appendChild(b);
+        left.appendChild(s);
+
+        header.appendChild(left);
+
+        const itemsWrap = document.createElement("div");
+        itemsWrap.className = "items";
+        itemsWrap.dataset.date = dateKey;
+
         const items = plan.days[dateKey] || [];
-        const fromIdx = items.findIndex(x => x.id === dragged.id);
-        if(fromIdx < 0) return;
+        sortItems(items);
 
-        const target = e.target.closest(".item");
-        if(!target) return;
-        const toId = target.dataset.id;
-        const toIdx = items.findIndex(x => x.id === toId);
-        if(toIdx < 0 || toIdx === fromIdx) return;
+        items.forEach((it) => {
+          const itemEl = document.createElement("div");
+          itemEl.className = "item";
+          itemEl.draggable = true;
+          itemEl.dataset.id = it.id;
+          itemEl.dataset.date = dateKey;
 
-        const [moved] = items.splice(fromIdx, 1);
-        items.splice(toIdx, 0, moved);
-        plan.days[dateKey] = items;
+          const drag = document.createElement("div");
+          drag.className = "drag";
+          drag.title = "드래그해서 순서 변경";
+          drag.textContent = "⋮⋮";
 
-        scheduleSave();
-        render();
-        toast("순서를 변경했어요.");
+          const body = document.createElement("div");
+
+          const meta = document.createElement("div");
+          meta.className = "meta";
+
+          const time = document.createElement("span");
+          time.className = "time";
+          time.textContent = timeLabel(it);
+
+          const tag = document.createElement("span");
+          tag.className = "pill";
+          tag.textContent = catText(it.tag);
+
+          const spot = document.createElement("span");
+          spot.className = "spot";
+          spot.textContent = it.title || "(제목 없음)";
+
+          meta.appendChild(time);
+          meta.appendChild(tag);
+          meta.appendChild(spot);
+
+          const loc = document.createElement("div");
+          loc.className = "loc";
+          loc.textContent = it.location ? it.location : "";
+
+          const note = document.createElement("div");
+          note.className = "note";
+          note.textContent = it.note ? it.note : "";
+
+          body.appendChild(meta);
+          if(it.location) body.appendChild(loc);
+          if(it.note) body.appendChild(note);
+
+          const actions = document.createElement("div");
+          actions.className = "actions";
+
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "수정";
+          editBtn.onclick = () => {
+            $("fDate").value = dateKey;
+            $("fStart").value = it.start || "";
+            $("fEnd").value = it.end || "";
+            $("fTitle").value = it.title || "";
+            $("fTag").value = it.tag || "Food";
+            $("fLocation").value = it.location || "";
+            $("fNote").value = it.note || "";
+            editing = { date: dateKey, id: it.id };
+            $("btnAdd").textContent = "수정 저장";
+            toast("수정 모드: 오른쪽에서 저장하세요");
+          };
+
+          const delBtn = document.createElement("button");
+          delBtn.className = "danger";
+          delBtn.textContent = "삭제";
+          delBtn.onclick = () => {
+            if(confirm("이 항목을 삭제할까요?")){
+              plan.days[dateKey] = (plan.days[dateKey] || []).filter(x => x.id !== it.id);
+              if(plan.days[dateKey].length === 0) delete plan.days[dateKey];
+              scheduleSave();
+              render();
+              toast("삭제 완료");
+            }
+          };
+
+          actions.appendChild(editBtn);
+          actions.appendChild(delBtn);
+
+          itemEl.appendChild(drag);
+          itemEl.appendChild(body);
+          itemEl.appendChild(actions);
+
+          // Drag reorder
+          itemEl.addEventListener("dragstart", (e)=>{
+            e.dataTransfer.setData("text/plain", JSON.stringify({ date: dateKey, id: it.id }));
+            e.dataTransfer.effectAllowed = "move";
+            itemEl.style.opacity = "0.60";
+          });
+          itemEl.addEventListener("dragend", ()=> itemEl.style.opacity = "1");
+
+          itemsWrap.appendChild(itemEl);
+        });
+
+        itemsWrap.addEventListener("dragover", (e)=>{
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+        });
+
+        itemsWrap.addEventListener("drop", (e)=>{
+          e.preventDefault();
+          const payload = e.dataTransfer.getData("text/plain");
+          if(!payload) return;
+
+          let dragged;
+          try{ dragged = JSON.parse(payload); } catch { return; }
+
+          if(dragged.date !== dateKey) {
+            toast("같은 날짜 안에서만 드래그 정렬이 가능해요.");
+            return;
+          }
+
+          const items = plan.days[dateKey] || [];
+          const fromIdx = items.findIndex(x => x.id === dragged.id);
+          if(fromIdx < 0) return;
+
+          const target = e.target.closest(".item");
+          if(!target) return;
+
+          const toId = target.dataset.id;
+          const toIdx = items.findIndex(x => x.id === toId);
+          if(toIdx < 0 || toIdx === fromIdx) return;
+
+          const [moved] = items.splice(fromIdx, 1);
+          items.splice(toIdx, 0, moved);
+          plan.days[dateKey] = items;
+
+          scheduleSave();
+          render();
+          toast("순서를 변경했어요.");
+        });
+
+        dayBox.appendChild(header);
+        dayBox.appendChild(itemsWrap);
+        list.appendChild(dayBox);
       });
 
-      dayBox.appendChild(header);
-      dayBox.appendChild(itemsWrap);
-      list.appendChild(dayBox);
-    });
-  }
-
-  function clearForm(){
-    $("fStart").value = "";
-    $("fEnd").value = "";
-    $("fTitle").value = "";
-    $("fTag").value = "Food";
-    $("fLocation").value = "";
-    $("fNote").value = "";
-    editing = null;
-    $("btnAdd").textContent = "추가";
-  }
-
-  function upsertItem(){
-    const date = $("fDate").value;
-    const start = $("fStart").value.trim();
-    const end = $("fEnd").value.trim();
-    const title = $("fTitle").value.trim();
-    const tag = $("fTag").value;
-    const location = $("fLocation").value.trim();
-    const note = $("fNote").value.trim();
-
-    if(!date){ toast("날짜를 선택해주세요."); return; }
-    if(!title){ toast("장소/스팟 이름은 꼭 입력해주세요."); return; }
-    if(start && end && end < start){ toast("종료 시간이 시작 시간보다 빠를 수 없어요."); return; }
-
-    plan.days[date] = plan.days[date] || [];
-
-    if(editing){
-      const prevDate = editing.date;
-      // 기존 항목 찾아서 제거 후 새로 넣는 방식(날짜 이동 지원)
-      const prevItems = plan.days[prevDate] || [];
-      const prevIdx = prevItems.findIndex(x => x.id === editing.id);
-      let base = null;
-      if(prevIdx >= 0){
-        base = prevItems.splice(prevIdx, 1)[0];
-        if(prevItems.length === 0) delete plan.days[prevDate];
-      }
-      const id = base?.id || uid();
-      plan.days[date].push({ id, start, end, title, tag, location, note });
-      toast("수정 저장 완료!");
-    } else {
-      plan.days[date].push({ id: uid(), start, end, title, tag, location, note });
-      toast("추가 완료!");
-    }
-
-    scheduleSave();
-    clearForm();
-    render();
-  }
-
-  // 버튼 연결
-  $("btnAdd").addEventListener("click", upsertItem);
-  $("btnClear").addEventListener("click", ()=>{ clearForm(); toast("입력을 지웠어요."); });
-
-  // 옵션 B에서는 "공유 링크 만들기" = room 생성/고정
-  $("btnShare").addEventListener("click", ()=>{
-    ensureRoom();
-    setShareStatus(true);
-    toast("이 링크만 공유하면 같이 편집돼요!");
-  });
-  $("btnCopy").addEventListener("click", copyLink);
-
-  // 초기화
-  (async function init(){
-    const room = ensureRoom();
-
-    // 날짜 기본값
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth()+1).padStart(2,"0");
-    const dd = String(d.getDate()).padStart(2,"0");
-    $("fDate").value = `${yyyy}-${mm}-${dd}`;
-
-    // 서버에서 처음 로드
-    try{
-      const data = await fetchServerPlan(room);
-      plan = data.plan || { days:{} };
-      serverVersion = data.version || 1;
-      lastUpdatedAt = data.updatedAt || Date.now();
       setShareStatus(true);
-      render();
-      startPolling();
-    }catch(e){
-      console.warn(e);
-      toast("동기화 서버 연결 실패: URL 확인");
-      // 그래도 UI는 보이게
-      render();
-      startPolling();
     }
-  })();
-  // 💋 Kiss button interaction
-document.getElementById("kissBtn")?.addEventListener("click", () => {
-  const hearts = ["💖","💕","💗","💘","💝"];
 
-  for(let i = 0; i < 6; i++){
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+    function clearForm(){
+      $("fStart").value = "";
+      $("fEnd").value = "";
+      $("fTitle").value = "";
+      $("fTag").value = "Food";
+      $("fLocation").value = "";
+      $("fNote").value = "";
+      editing = null;
+      $("btnAdd").textContent = "추가";
+    }
 
-    const rect = document.getElementById("kissBtn").getBoundingClientRect();
-    heart.style.left = rect.left + rect.width/2 + (Math.random()*30-15) + "px";
-    heart.style.top = rect.top + "px";
-    heart.style.animationDelay = (Math.random() * 0.15) + "s";
+    function upsertItem(){
+      const date = $("fDate").value;
+      const start = $("fStart").value.trim();
+      const end = $("fEnd").value.trim();
+      const title = $("fTitle").value.trim();
+      const tag = $("fTag").value;
+      const location = $("fLocation").value.trim();
+      const note = $("fNote").value.trim();
 
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 1500);
-  }
-});
-</script>
+      if(!date){ toast("날짜를 선택해주세요."); return; }
+      if(!title){ toast("장소/스팟 이름은 꼭 입력해주세요."); return; }
+      if(start && end && end < start){ toast("종료 시간이 시작 시간보다 빠를 수 없어요."); return; }
+
+      plan.days[date] = plan.days[date] || [];
+
+      if(editing){
+        const prevDate = editing.date;
+        const prevItems = plan.days[prevDate] || [];
+        const prevIdx = prevItems.findIndex(x => x.id === editing.id);
+        let base = null;
+
+        if(prevIdx >= 0){
+          base = prevItems.splice(prevIdx, 1)[0];
+          if(prevItems.length === 0) delete plan.days[prevDate];
+        }
+
+        const id = base?.id || uid();
+        plan.days[date].push({ id, start, end, title, tag, location, note });
+        toast("수정 저장 완료!");
+      } else {
+        plan.days[date].push({ id: uid(), start, end, title, tag, location, note });
+        toast("추가 완료!");
+      }
+
+      // ✅ 서버 저장 + 로컬 백업
+      scheduleSave();
+      saveLocal(ensureRoom());
+
+      clearForm();
+      render();
+    }
+
+    // ---- 버튼 연결 ----
+    $("btnAdd").addEventListener("click", upsertItem);
+    $("btnClear").addEventListener("click", ()=>{ clearForm(); toast("입력을 지웠어요."); });
+
+    // 옵션 B에서는 "공유 링크 만들기" = room 링크를 확정하고 안내만
+    $("btnShare").addEventListener("click", ()=>{
+      ensureRoom();
+      setShareStatus(true);
+      toast("이 링크만 공유하면 같이 편집돼요!");
+    });
+
+    $("btnCopy").addEventListener("click", copyLink);
+
+    // ---- 초기화 ----
+    (async function init(){
+      const room = ensureRoom();
+
+      // 날짜 기본값
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      $("fDate").value = `${yyyy}-${mm}-${dd}`;
+
+      // 1) 우선 로컬 백업이 있으면 즉시 표시 (UX)
+      loadLocal(room);
+      render();
+
+      // 2) 서버에서 가져와서 동기화
+      try{
+        const data = await fetchServerPlan(room);
+        plan = data.plan || { days:{} };
+        serverVersion = data.version || 1;
+        lastUpdatedAt = data.updatedAt || Date.now();
+        saveLocal(room);
+        setShareStatus(true);
+        render();
+        startPolling();
+      }catch(e){
+        console.warn(e);
+        // 서버 실패해도 로컬로 유지
+        if(loadLocal(room)){
+          toast("서버 연결 실패 → 로컬 백업으로 유지 중");
+        } else {
+          toast("동기화 서버 연결 실패: Apps Script 배포 확인");
+        }
+        setShareStatus(true);
+        render();
+        startPolling();
+      }
+    })();
+
+    // 💋 Kiss button interaction
+    document.getElementById("kissBtn")?.addEventListener("click", () => {
+      const hearts = ["💖","💕","💗","💘","💝"];
+      const btn = document.getElementById("kissBtn");
+      const rect = btn.getBoundingClientRect();
+
+      for(let i = 0; i < 6; i++){
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+
+        heart.style.left = (rect.left + rect.width/2 + (Math.random()*30-15)) + "px";
+        heart.style.top  = (rect.top + 6) + "px";
+        heart.style.animationDelay = (Math.random() * 0.15) + "s";
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1500);
+      }
+    });
+  </script>
 </body>
 </html>
